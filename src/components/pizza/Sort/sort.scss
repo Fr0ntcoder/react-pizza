@@ -1,0 +1,60 @@
+@import "../../../assets/scss/main.scss";
+
+.pizza {
+  &-sort {
+    &__list {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      padding: 15px 0;
+      border-radius: 10px;
+      background: #fff;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
+      &--visible {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    &__item {
+      display: block;
+      font-weight: 400;
+      font-size: 16px;
+      padding: 15px 30px;
+      color: #000;
+      cursor: pointer;
+      &--active {
+        background: rgba(254, 95, 30, 0.05);
+      }
+    }
+    &__text {
+      position: relative;
+      display: flex;
+      font-size: 16px;
+      align-items: center;
+      padding-left: 15px;
+      &-link {
+        border-bottom: 1px dashed $mainColor;
+        color: $mainColor;
+        cursor: pointer;
+      }
+      &-inner {
+        font-weight: bold;
+      }
+    }
+    &__icon {
+      position: absolute;
+      left: -6px;
+      flex: none;
+      font-size: 18px;
+      &-down {
+        top: -5px;
+      }
+      &-up {
+        top: 4px;
+      }
+    }
+  }
+}
