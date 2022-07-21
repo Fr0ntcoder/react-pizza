@@ -1,0 +1,29 @@
+@import "../../../assets/scss/main.scss";
+
+.pagination {
+  display: flex;
+  &-link {
+    display: flex;
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid $mainColor;
+    border-radius: 50%;
+    color: $mainColor;
+    cursor: pointer;
+    &--active {
+      background: $mainColor;
+      color: #fff;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    &:hover {
+      background: $mainColor;
+      color: #fff;
+    }
+  }
+}
