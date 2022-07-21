@@ -1,5 +1,10 @@
 import React from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectFilter,
+  setCategoryId,
+  setCurrentPage,
+} from "../../../redux/slices/filterSlice";
 import "./filter.scss";
 
 const Filter = () => {
@@ -11,19 +16,20 @@ const Filter = () => {
     "Острые",
     "Закрытые",
   ];
-  const [categoryItem, setCategoryItem] = React.useState(0);
-
-  const onClickCategory = (i) => {
-    setCategoryItem(i);
+  const dispatch = useDispatch();
+  const { categoryId } = useSelector(selectFilter);
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+    dispatch(setCurrentPage(1));
   };
   return (
     <ul className="filter-category__list">
       {categoryList.map((item, index) => (
         <li
           key={index}
-          onClick={() => onClickCategory(index)}
+          onClick={() => onChangeCategory(index)}
           className={`filter-category__item ${
-            categoryItem === index ? "filter-category__item--active" : ""
+            categoryId === index ? "filter-category__item--active" : ""
           }`}
         >
           {item}

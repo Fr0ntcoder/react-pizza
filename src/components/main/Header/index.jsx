@@ -1,10 +1,17 @@
 import React from "react";
-import { FaShoppingCart, FaSearch, FaTimes } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCart } from "../../../redux/slices/cartSlice";
+import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Logo from "../../../assets/img/logo.svg";
-
+import Search from "../../pizza/Search";
 import "./header.scss";
 const Header = () => {
+  const { items, totalPrice } = useSelector(selectCart);
+  const location = useLocation();
+
+  console.log(location);
   return (
     <header className="header">
       <div className="container">
@@ -18,23 +25,19 @@ const Header = () => {
               </span>
             </div>
           </Link>
-          <div className="header-search">
-            <FaSearch className="header-search__icon" />
-            <input
-              type="search"
-              className="header-search__input"
-              placeholder="Поиск пиццы..."
-            />
-            <FaTimes className="header-search__remove" />
-          </div>
-          <Link to="/cart" className="header-cart">
-            <span className="header-cart__currency">7777</span>
-            <span className="header-cart__line"></span>
-            <div className="header-cart__counter">
-              <FaShoppingCart />
-              <span>5</span>
-            </div>
-          </Link>
+          {location.pathname === "/" && (
+            <>
+              <Search />
+              <Link to="/cart" className="header-cart">
+                <span className="header-cart__currency">{totalPrice} ₽</span>
+                <span className="header-cart__line"></span>
+                <div className="header-cart__counter">
+                  <FaShoppingCart />
+                  <span>{items.length}</span>
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

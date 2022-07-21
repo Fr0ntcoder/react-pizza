@@ -1,18 +1,35 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { selectCartItem, addCart } from "../../../redux/slices/cartSlice";
 import { FaPlus } from "react-icons/fa";
 
 import "./pizza-item.scss";
 
-function PizzaItem({ imageUrl, name, types, sizes, price, rating }) {
+function PizzaItem({ id, imageUrl, name, types, sizes, price }) {
+  const dispatch = useDispatch();
+  const cartItem = useSelector(selectCartItem(id));
+  const count = cartItem ? cartItem.count : 0;
   const typeName = ["Тонкое", "Традиционное"];
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
+
+  const getCartItem = () => {
+    const data = {
+      id,
+      name,
+      imageUrl,
+      price,
+      type: typeName[activeType],
+      size: sizes[activeSize],
+    };
+    dispatch(addCart(data));
+  };
   return (
     <div className="pizza-item">
-      <span className="pizza-item__img">
+      <Link to={`/pizza/${id}`} className="pizza-item__img">
         <img src={imageUrl} alt="" className="pizza-item__img" />
-      </span>
+      </Link>
       <h3 className="pizza-item__title">{name}</h3>
       <div className="pizza-item__content">
         <div className="pizza-item__dough">
@@ -44,10 +61,19 @@ function PizzaItem({ imageUrl, name, types, sizes, price, rating }) {
       </div>
       <div className="pizza-item__bottom">
         <span className="pizza-item__price">от {price} ₽</span>
-        <div className="pizza-item__btn">
+        <div
+          className={`pizza-item__btn ${
+            count > 0 ? "pizza-item__btn--active" : ""
+          }`}
+          onClick={getCartItem}
+        >
           <FaPlus />
           <span>Добавить</span>
-          <span className="pizza-item__btn-counter">1</span>
+          {count > 0 ? (
+            <span className="pizza-item__btn-counter">{count}</span>
+          ) : (
+            false
+          )}
         </div>
       </div>
     </div>

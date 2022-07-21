@@ -1,27 +1,14 @@
 import React from "react";
-import axios from "axios";
-
+import { useSelector } from "react-redux";
+import { selectPizzaItems } from "../redux/slices/pizzaSlice";
 import Filter from "../components/pizza/Filter";
 import Sort from "../components/pizza/Sort";
 import PizzaItem from "../components/pizza/PizzaItem";
 import Skeleton from "../components/pizza/Skeleton/Index";
+import Pagination from "../components/pizza/Pagination";
+
 const Home = () => {
-  const [pizzaItems, setPizzaItems] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  React.useEffect(() => {
-    async function fetchPizzaData() {
-      try {
-        const response = await axios.get(
-          "https://62d12f5bdccad0cf17624897.mockapi.io/pizza"
-        );
-        setIsLoading(false);
-        setPizzaItems(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchPizzaData();
-  }, []);
+  const { items, status } = useSelector(selectPizzaItems);
   return (
     <div className="container">
       <div className="pizza-top">
@@ -31,10 +18,11 @@ const Home = () => {
       <div className="pizza-wrap">
         <h2 className="pizza-title">Все пиццы</h2>
         <div className="pizza-list">
-          {isLoading
-            ? [...Array(6)].map(() => <Skeleton />)
-            : pizzaItems.map((item) => <PizzaItem key={item.id} {...item} />)}
+          {status !== "loading"
+            ? [...Array(6)].map((el, i) => <Skeleton key={i} />)
+            : items.map((item) => <PizzaItem key={item.id} {...item} />)}
         </div>
+        <Pagination />
       </div>
     </div>
   );

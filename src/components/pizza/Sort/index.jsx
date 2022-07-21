@@ -1,21 +1,51 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectFilter,
+  setSort,
+  setCurrentPage,
+} from "../../../redux/slices/filterSlice";
 import { FaSortDown, FaSortUp } from "react-icons/fa";
-
 import "./sort.scss";
+export const sortName = [
+  {
+    name: "популярности(DESC)",
+    type: "rating",
+    value: "desc",
+  },
+  {
+    name: "популярности(ASC)",
+    type: "rating",
+    value: "asc",
+  },
+  {
+    name: "цене(DESC)",
+    type: "price",
+    value: "desc",
+  },
+  {
+    name: "цене(ASC)",
+    type: "price",
+    value: "asc",
+  },
+  {
+    name: "алфавиту(DESC)",
+    type: "name",
+    value: "desc",
+  },
+  {
+    name: "алфавиту(ASC)",
+    type: "name",
+    value: "asc",
+  },
+];
 const Sort = () => {
-  const sortt = [
-    "популярности(DESC)",
-    "популярности(ASC)",
-    "цене(DESC)",
-    "цене(ASC)",
-    "алфавиту(DESC)",
-    "алфавиту(ASC)",
-  ];
-  const sortName = ["популярности", "цене", "алфавиту"];
-  const [sortItem, setSortItem] = React.useState(0);
+  const dispatch = useDispatch();
+  const { sort } = useSelector(selectFilter);
   const [sortDrop, setSortDrop] = React.useState(false);
-  function closeDropMenu(i) {
-    setSortItem(i);
+  function closeDropMenu(obj) {
+    dispatch(setSort(obj));
+    dispatch(setCurrentPage(1));
     setSortDrop(false);
   }
   return (
@@ -33,7 +63,7 @@ const Sort = () => {
             className="pizza-sort__text-link"
             onClick={() => setSortDrop(!sortDrop)}
           >
-            {sortName[sortItem]}
+            {sort.name}
           </span>
         </span>
         <ul
@@ -44,12 +74,12 @@ const Sort = () => {
           {sortName.map((item, i) => (
             <li
               key={i}
-              onClick={() => closeDropMenu(i)}
+              onClick={() => closeDropMenu(item)}
               className={`pizza-sort__item ${
-                sortItem === i ? "pizza-sort__item--active" : ""
+                sort.name === item.name ? "pizza-sort__item--active" : ""
               }`}
             >
-              {item}
+              {item.name}
             </li>
           ))}
         </ul>

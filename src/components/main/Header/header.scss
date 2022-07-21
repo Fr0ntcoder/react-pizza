@@ -1,9 +1,5 @@
 @import "../../../assets/scss/main.scss";
 .header {
-  padding-top: 50px;
-  @media screen and (max-width: 550px) {
-    padding-top: 30px;
-  }
   &-search {
     position: relative;
     @media screen and (max-width: 992px) {
