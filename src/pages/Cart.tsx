@@ -1,18 +1,29 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCart, clearCart } from "../redux/slices/cartSlice";
-import ShopingCart from "../assets/img/shopping-cart.svg";
-import CartItem from "../components/cart/cartItem";
+
+import { CartItem } from "../components";
+
+import { selectCart } from "../redux/cart/selectors";
+import { clearItems } from "../redux/cart/slice";
+
 import { FaShoppingCart, FaTrashAlt, FaAngleLeft } from "react-icons/fa";
+import ShopingCart from "../assets/img/shopping-cart.svg";
 
-const Cart = () => {
+const Cart: React.FC = () => {
   const dispatch = useDispatch();
-  const { items, totalPrice } = useSelector(selectCart);
-  const pizzaCount = items.reduce((sum, item) => sum + item.count, 0);
+  const { totalPrice, items } = useSelector(selectCart);
 
-  const clearCartList = () => {
-    dispatch(clearCart());
+  const totalCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0
+  );
+
+  const onClickClear = () => {
+    if (window.confirm("Очистить корзину?")) {
+      dispatch(clearItems());
+    }
   };
+
   return (
     <div className="container">
       {items.length != 0 ? (
@@ -22,21 +33,21 @@ const Cart = () => {
               <FaShoppingCart />
               <p>Корзина</p>
             </h3>
-            <span className="cart-remove" onClick={clearCartList}>
+            <span className="cart-remove" onClick={onClickClear}>
               <FaTrashAlt />
               <p>Очистить корзину</p>
             </span>
           </div>
           <div className="cart-content">
             <div className="cart-list">
-              {items.map((item) => (
+              {items.map((item: any) => (
                 <CartItem key={item.id} {...item} />
               ))}
             </div>
             <div className="cart-content__info">
               <div className="cart-content__block">
                 <p>Всего пицц: </p>
-                <span className="cart-content__counter">{pizzaCount} шт</span>
+                <span className="cart-content__counter">{totalCount} шт</span>
               </div>
               <div className="cart-content__block">
                 <p>Сумма заказа: </p>

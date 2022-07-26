@@ -1,17 +1,28 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectCart } from "../../../redux/slices/cartSlice";
-import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+
 import Logo from "../../../assets/img/logo.svg";
-import Search from "../../pizza/Search";
+import { Search } from "../../pizza/Search";
+import { selectCart } from "../../../redux/cart/selectors";
+import { FaShoppingCart } from "react-icons/fa";
 import "./header.scss";
-const Header = () => {
+export const Header: React.FC = () => {
   const { items, totalPrice } = useSelector(selectCart);
   const location = useLocation();
+  const isMounted = React.useRef(false);
+  const totalCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0
+  );
 
-  console.log(location);
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const json = JSON.stringify(items);
+      localStorage.setItem("cart", json);
+    }
+    isMounted.current = true;
+  }, [items]);
   return (
     <header className="header">
       <div className="container">
@@ -25,7 +36,7 @@ const Header = () => {
               </span>
             </div>
           </Link>
-          {location.pathname === "/" && (
+          {location.pathname !== "/cart" && (
             <>
               <Search />
               <Link to="/cart" className="header-cart">
@@ -33,7 +44,7 @@ const Header = () => {
                 <span className="header-cart__line"></span>
                 <div className="header-cart__counter">
                   <FaShoppingCart />
-                  <span>{items.length}</span>
+                  <span>{totalCount}</span>
                 </div>
               </Link>
             </>
@@ -43,5 +54,3 @@ const Header = () => {
     </header>
   );
 };
-
-export default Header;

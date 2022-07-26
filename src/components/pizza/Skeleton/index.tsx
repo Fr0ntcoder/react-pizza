@@ -1,7 +1,7 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
 
-const Skeleton = () => {
+export const Skeleton: React.FC = () => {
   return (
     <div className="pizza-item">
       <ContentLoader
@@ -22,5 +22,3 @@ const Skeleton = () => {
     </div>
   );
 };
-
-export default Skeleton;
