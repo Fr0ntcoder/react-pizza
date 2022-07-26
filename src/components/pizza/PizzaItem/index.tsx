@@ -1,36 +1,56 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { selectCartItem, addCart } from "../../../redux/slices/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartItemById } from "../../../redux/cart/selectors";
+import { CartItem } from "../../../redux/cart/types";
+import { addItem } from "../../../redux/cart/slice";
 import { FaPlus } from "react-icons/fa";
 
 import "./pizza-item.scss";
+const typeNames = ["тонкое", "традиционное"];
 
-function PizzaItem({ id, imageUrl, name, types, sizes, price }) {
+type PizzaBlockProps = {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  sizes: number[];
+  types: number[];
+  rating: number;
+};
+export const PizzaItem: React.FC<PizzaBlockProps> = ({
+  id,
+  imageUrl,
+  title,
+  types,
+  sizes,
+  price,
+}) => {
   const dispatch = useDispatch();
-  const cartItem = useSelector(selectCartItem(id));
-  const count = cartItem ? cartItem.count : 0;
-  const typeName = ["Тонкое", "Традиционное"];
+  const cartItem = useSelector(selectCartItemById(id));
   const [activeType, setActiveType] = React.useState(0);
   const [activeSize, setActiveSize] = React.useState(0);
 
-  const getCartItem = () => {
-    const data = {
+  const addedCount = cartItem ? cartItem.count : 0;
+
+  const onClickAdd = () => {
+    const item: CartItem = {
       id,
-      name,
-      imageUrl,
+      title,
       price,
-      type: typeName[activeType],
+      imageUrl,
+      type: typeNames[activeType],
       size: sizes[activeSize],
+      count: 0,
     };
-    dispatch(addCart(data));
+    dispatch(addItem(item));
   };
   return (
     <div className="pizza-item">
       <Link to={`/pizza/${id}`} className="pizza-item__img">
         <img src={imageUrl} alt="" className="pizza-item__img" />
       </Link>
-      <h3 className="pizza-item__title">{name}</h3>
+      <h3 className="pizza-item__title">{title}</h3>
       <div className="pizza-item__content">
         <div className="pizza-item__dough">
           {types.map((id, i) => (
@@ -41,7 +61,7 @@ function PizzaItem({ id, imageUrl, name, types, sizes, price }) {
                 activeType === id ? "pizza-item__dough-link--active" : ""
               }`}
             >
-              {typeName[id]}
+              {typeNames[id]}
             </span>
           ))}
         </div>
@@ -63,14 +83,14 @@ function PizzaItem({ id, imageUrl, name, types, sizes, price }) {
         <span className="pizza-item__price">от {price} ₽</span>
         <div
           className={`pizza-item__btn ${
-            count > 0 ? "pizza-item__btn--active" : ""
+            addedCount > 0 ? "pizza-item__btn--active" : ""
           }`}
-          onClick={getCartItem}
+          onClick={onClickAdd}
         >
           <FaPlus />
           <span>Добавить</span>
-          {count > 0 ? (
-            <span className="pizza-item__btn-counter">{count}</span>
+          {addedCount > 0 ? (
+            <span className="pizza-item__btn-counter">{addedCount}</span>
           ) : (
             false
           )}
@@ -78,6 +98,4 @@ function PizzaItem({ id, imageUrl, name, types, sizes, price }) {
       </div>
     </div>
   );
-}
-
-export default PizzaItem;
+};

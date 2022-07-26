@@ -1,6 +1,6 @@
 import React from "react";
 import "./notFound.scss";
-const NotFoundBlock = () => {
+export const NotFoundBlock: React.FC = () => {
   return (
     <div className="container">
       <div className="notfound-wrap">
@@ -15,5 +15,3 @@ const NotFoundBlock = () => {
     </div>
   );
 };
-
-export default NotFoundBlock;
